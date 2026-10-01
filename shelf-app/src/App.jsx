@@ -98,7 +98,11 @@ export default function App() {
             </Panel>
 
             <Panel title="Want to read">
-                {booksWaiting}
+                {wishlist.length > 0 && wishlist.map(book => <BookCard key={book.id} title={book.title} author={book.author} pages={book.pages} rating={book.rating} /> )}
+            </Panel>
+
+            <Panel title="Finished reading">
+                {finishedReading.length > 0 && finishedReading.map(book => <BookCard key={book.id} {...book} /> )}
             </Panel>
 
             <Footer></Footer>
