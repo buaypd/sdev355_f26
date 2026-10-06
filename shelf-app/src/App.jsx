@@ -4,50 +4,63 @@ import BookCard from "./BookCard"
 import Panel from "./Panel"
 
 const BOOKS = [
-  {
-    id: "b1",
-    title: "Red Rising",
-    author: "Pierce Brown",
-    status: "reading",
-    rating: 5,
-    tags: ["sci-fi", "dystopian", "series"],
-  },
-  {
-    id: "b2",
-    title: "The Eye of the World",
-    author: "Robert Jordan",
-    status: "reading",
-    rating: 4,
-    tags: ["fantasy", "epic", "series"],
-  },
-  {
-    id: "b3",
-    title: "Harry Potter and the Prisoner of Azkaban",
-    author: "J.K. Rowling",
-    status: "finished",
-    rating: 5,
-    tags: ["fantasy", "series"],
-  },
-  {
-    id: "b4",
-    title: "The Fellowship of the Ring",
-    author: "J.R.R. Tolkien",
-    status: "want",
-    rating: 0,
-    tags: ["fantasy", "classic", "series"],
-  },
-  {
-    id: "b5",
-    title: "The Hunger Games",
-    author: "Suzanne Collins",
-    status: "finished",
-    rating: 4,
-    tags: ["dystopian", "ya", "series"],
-  },
+    {
+        id: "b1",
+        title: "Red Rising",
+        author: "Pierce Brown",
+        status: "reading",
+        rating: 5,
+        tags: ["sci-fi", "dystopian", "series"],
+    },
+    {
+        id: "b2",
+        title: "The Eye of the World",
+        author: "Robert Jordan",
+        status: "reading",
+        rating: 4,
+        tags: ["fantasy", "epic", "series"],
+    },
+    {
+        id: "b3",
+        title: "Harry Potter and the Prisoner of Azkaban",
+        author: "J.K. Rowling",
+        status: "finished",
+        rating: 5,
+        tags: ["fantasy", "series"],
+    },
+    {
+        id: "b4",
+        title: "The Fellowship of the Ring",
+        author: "J.R.R. Tolkien",
+        status: "want",
+        rating: 0,
+        tags: ["fantasy", "classic", "series"],
+    },
+    {
+        id: "b5",
+        title: "The Hunger Games",
+        author: "Suzanne Collins",
+        status: "finished",
+        rating: 4,
+        tags: ["dystopian", "ya", "series"],
+    },
+    {
+        id: "b6",
+        title: "The Body Keeps The Score",
+        author: "Bessel van der Kolk",
+        status: "unstarted",
+        rating: 5,
+        tags: ["self help", "psychology"],
+    },
 ];
 
-const booksReading = BOOKS.length === 0 ? 
-    <p>No books found</p> : 
+const currentlyReading = BOOKS.filter(el => el.status === "reading");
+const finishedReading = BOOKS.filter(el => el.status === "finished");
+const wishlist = BOOKS.filter(el => el.status === "want");
+const unstarted = BOOKS.filter(el => el.status === "unstarted");
+
+const booksReading = BOOKS.length === 0 ?
+    <p>No books found</p> :
     <p>We got books</p>;
 
 let booksWaiting;
@@ -72,11 +85,25 @@ export default function App() {
             <Header />
 
             <Panel title="Currently reading">
-                {bookCards} 
+                {currentlyReading.length > 0 && currentlyReading.map(book => {
+                    return (
+                        <BookCard
+                            key={book.id}
+                            title={book.title}
+                            author={book.author}
+                            pages={book.pages}
+                            rating={book.rating}
+                        />
+                    )
+                })}
             </Panel>
 
             <Panel title="Want to read">
-                {booksWaiting}
+                {wishlist.length > 0 && wishlist.map(book => <BookCard key={book.id} title={book.title} author={book.author} pages={book.pages} rating={book.rating} /> )}
+            </Panel>
+
+            <Panel title="Finished reading">
+                {finishedReading.length > 0 && finishedReading.map(book => <BookCard key={book.id} {...book} /> )}
             </Panel>
 
             <Footer></Footer>
