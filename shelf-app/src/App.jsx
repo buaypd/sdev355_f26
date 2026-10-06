@@ -57,11 +57,14 @@ if (BOOKS.length === 0) {
     booksWaiting = <p>I've got books</p>
 }
 
-const bookCards = BOOKS.map(book => <BookCard 
-    title={book.title} 
-    author={book.author} 
-    pages={book.pages} 
-    rating={book.rating} />);
+// const bookCards = BOOKS.map(book => <BookCard 
+//     title={book.title} 
+//     author={book.author} 
+//     pages={book.pages} 
+//     rating={book.rating} />);
+
+    
+const bookCards = BOOKS.map(book => <BookCard book={book} />);
 
 export default function App() {
     return (
