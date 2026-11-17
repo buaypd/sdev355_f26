@@ -18,23 +18,30 @@ function Shelf() {
     const [state, dispatch] = useReducer(viewReducer, initialState);
     console.log(state);
 
-    let after = viewReducer(state, { type: "toggle_hide" })
-    console.log(after);
+    //change the hide toggle
+    // let after = viewReducer(state, { type: "toggle_hide" })
+    // console.log(after);
 
-    after = viewReducer(after, { type: "query_changed", query: "hunger" });
-    console.log(after);
+    // //change the page
+    // after = viewReducer(state, { type: "page_changed", page: 2 });
+    // console.log(after);
+
+    // //change the query
+    // after = viewReducer(after, { type: "query_changed", query: "hunger" });
+    // console.log(after);
 
     const { 
         data: books, 
         setData: setBooks, 
         loading, error, retry } = useContext(BookContext);
 
-    const [page, setPage] = useState(1);
-    const [hideFinished, setHideFinished] = useState(false);
-    const [query, setQuery] = useState("");
+    // const [page, setPage] = useState(1);
+    // const [hideFinished, setHideFinished] = useState(false);
+    // const [query, setQuery] = useState("");
+
     const [currentId, setCurrentId] = useState(null);
 
-    const settled = useDebouncedValue(query, 300);
+    const settled = useDebouncedValue(state.query, 300);
 
     function changeStatus(id, status) {
         setBooks(
@@ -63,13 +70,13 @@ function Shelf() {
     const matching = books.filter((book) =>
         book.title.toLowerCase().includes(settled.toLowerCase())
     );
-    const shown = hideFinished
+    const shown = state.hideFinished
         ? matching.filter((book) => book.status !== "finished")
         : matching;
     const current = books.find((book) => book.id === currentId);
 
     const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
-    const visible = shown.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const visible = shown.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
 
     // const reading = shown.filter((book) => book.status === "reading");
     // const want = shown.filter((book) => book.status === "want");
@@ -80,10 +87,10 @@ function Shelf() {
 
     useEffect(() => {
         document.title =
-            query === ""
+            state.query === ""
                 ? `Shelf — ${shown.length} books`
                 : `Shelf — ${shown.length} of ${books.length} shown`;
-    }, [shown.length, books.length, query]);
+    }, [shown.length, books.length, state.query]);
 
     useEffect(() => {
         function handleKeyDown(event) {
@@ -121,14 +128,16 @@ function Shelf() {
                 owner="Josh"
                 bookCount={books.length}
                 finishedCount={finishedCount}
-                hideFinished={hideFinished}
-                onHideFinishedChange={setHideFinished}
+                hideFinished={state.hideFinished}
+                onHideFinishedChange={() => dispatch({ type: "toggle_hide" })}
             />
 
             <NowReading book={current} />
-            <SearchBox value={query} onChange={setQuery} />
+            <SearchBox value={state.query} 
+                       onChange={(value) => dispatch({ type: "query_changed", query: value })} />
             <AddBook onAdd={addBook} />
-            <Pager page={page} pageCount={pageCount} onChange={setPage} />
+            <Pager page={state.page} pageCount={pageCount} 
+                   onChange={(value) => dispatch({ type: "page_changed", page: value})} />
 
             <ShelfBody
                 loading={loading}

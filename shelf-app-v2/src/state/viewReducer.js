@@ -2,9 +2,12 @@
 export const initialState = {
     query: "",
     page: 1,
-    hideFinished: false
+    hideFinished: false,
+    books: [],
+    currentId: null
 }
 
+//this must be a pure function!
 export function viewReducer(state, action) {
     switch (action.type) {
         case "query_changed":
